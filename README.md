@@ -9,6 +9,7 @@ Welcome to the Digital Asset Management (DAM) web application project!
 Application that can be accessed from a web browser where users can log in and upload digital media for storage, organization, and distribution.
 
 [Database Diagram](https://dbdiagram.io/d/5d4a41ffced98361d6dd5e05 "Database Diagram Link")
+
 [Notion Doc](https://www.notion.so/DAM-Digital-Asset-Manager-2395f377da7e41c68a23c51c4267ddc5 "Notion Doc")
 
 ### Requirements:
@@ -26,6 +27,7 @@ Application that can be accessed from a web browser where users can log in and u
 ### Notes:
 
 * Communication on Discord Channel:
+
    [Discord](https://discordapp.com/channels/543575371510054954/543575371962908682/608517191960231942 "Discord")
    
 * Intended frontend technologies:
