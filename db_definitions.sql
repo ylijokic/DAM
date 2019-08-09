@@ -50,3 +50,11 @@ ALTER TABLE `asset_folder_mapping` ADD FOREIGN KEY (`asset_id`) REFERENCES `asse
 
 ALTER TABLE `asset_folder_mapping` ADD FOREIGN KEY (`folder_id`) REFERENCES `folder` (`id`);
 
+/*Add some dummy data*/
+INSERT INTO `user`(email,pw) VALUES ("test_user@test.test","hunter2");
+
+INSERT INTO `asset`(name,physical_file_name,uploader,physical_file_size,physical_file_type) VALUES ("testAsset","some_image.jpg",1,3,"jpg");
+
+INSERT INTO `folder`(name,creator) VALUES ("test_folder",1);
+
+INSERT INTO `asset_folder_mapping`(asset_id,folder_id) VALUES (1,1);
