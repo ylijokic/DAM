@@ -1,0 +1,19 @@
+{
+  "name": "dam",
+  "version": "0.0.1",
+  "description": "Digital asset management project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ylijokic/DAM.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ylijokic/DAM/issues"
+  },
+  "homepage": "https://github.com/ylijokic/DAM#readme"
+}
