@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ylijokic/DAM/issues"
   },
-  "homepage": "https://github.com/ylijokic/DAM#readme"
+  "homepage": "https://github.com/ylijokic/DAM#readme",
+  "dependencies": {
+    "mysql2": "^1.6.5"
+  }
 }
