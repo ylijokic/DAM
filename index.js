@@ -1,27 +1,28 @@
 const express = require('express');
-const mysql = require('mysql2');
-
-//Create connection to express
 const app = express();
 
-// create the connection to database
+const mysql = require('./dbconn');
 
-/****Password is left empty****/
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'dam'
+//Router Modules
+const user = require('./routes/user');
+const asset = require('./routes/asset');
+const folder = require('./routes/folder');
+
+//Load Router Modules in App
+app.use('/user', user);
+app.use('/asset', asset);
+app.use('/folder', folder);
+
+//Load Database into App
+app.set('mysql', mysql);
+
+app.use(function(req, res) {
+  res.status(404);
 });
 
-app.use('/user', require('./user'));
-app.use('/asset', require('./asset'));
-app.use('/folder', require('./folder'));
-
-//Check Database Connection
-connection.connect(err => {
-  if (err) throw err;
-  // console.log(result);
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500);
 });
 
 app.listen('3000', () => {
