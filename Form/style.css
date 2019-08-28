@@ -1,0 +1,18 @@
+body {
+    font-family: 'Lato', sans-serif;
+}
+
+input {
+    font-family: 'Lato', sans-serif;
+    padding: 0.5em 0.5em;
+    margin: 0.2em;
+}
+
+fieldset {
+    display: grid;
+    padding: 1em;
+}
+
+#submit {
+    padding: 0.5em 4.15em;
+}
