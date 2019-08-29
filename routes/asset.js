@@ -103,14 +103,21 @@ router.put('/:id', function(req, res) {
   });
 });
 
-// //Delete asset from database
-// router.get('/delete/:id', (req, res) => {
-//   let sql = `DELETE FROM asset WHERE id = ${req.params.id}`;
-//   let query = connection.query(sql, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(JSON.stringify(result));
-//   });
-// });
+// DELETE request to Delete an asset from database
+router.delete('/:id', function(req, res) {
+  let mysql = req.app.get('mysql');
+  let sql = 'DELETE FROM asset WHERE id=?';
+  let inserts = [req.params.id];
+  sql = mysql.pool.query(sql, inserts, (err, results) => {
+    if (err) {
+      // console.log(error)
+      res.write(JSON.stringify(error));
+      res.status(400);
+      res.end();
+    } else {
+      res.end();
+    }
+  });
+});
 
 module.exports = router;
