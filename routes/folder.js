@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+//Helper function to Select all folders
 function getFolders(res, mysql, context, complete) {
   mysql.pool.query('SELECT * FROM folder', function(err, results, fields) {
     if (err) {
@@ -12,6 +13,7 @@ function getFolders(res, mysql, context, complete) {
   });
 }
 
+//Helper function to Select a single folder
 function getSingleFolder(res, mysql, context, id, complete) {
   let sql = `SELECT * FROM folder WHERE id = ?`;
   let inserts = [id];
@@ -25,7 +27,7 @@ function getSingleFolder(res, mysql, context, id, complete) {
   });
 }
 
-//Route to Select all folders in database
+//GET request to Select all folders in database
 router.get('/', (req, res) => {
   let callBackCount = 0;
   let context = {};
@@ -39,7 +41,7 @@ router.get('/', (req, res) => {
   }
 });
 
-//Route to Select a single folder from database
+//GET request to Select a single folder from database
 router.get('/:id', (req, res) => {
   let callBackCount = 0;
   let context = {};
@@ -53,21 +55,7 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// //Insert a folder
-// router.get('/addfolder', (req, res) => {
-//   let folder = {
-//     name: 'folder_for_important_things',
-//     creator: 3
-//   };
-//   let sql = 'INSERT INTO folder SET ?';
-//   let query = connection.query(sql, folder, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(result.insertId);
-//   });
-// });
-
-// Post request to insert a folder
+// POST request to insert a folder
 router.post('/', (req, res) => {
   let mysql = req.app.get('mysql');
   let sql = 'INSERT INTO folder (name, creator) VALUES (?, ?)';
@@ -82,16 +70,23 @@ router.post('/', (req, res) => {
   });
 });
 
-// // Route to Update asset name in database
-// router.get('/updatefolder/:id', (req, res) => {
-//   let newName = 'Updated_Folder_Name!';
-//   let sql = `UPDATE folder SET name = '${newName}' WHERE id = ${req.params.id}`;
-//   let query = connection.query(sql, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(JSON.stringify(result));
-//   });
-// });
+// PUT request to Update folder in database
+router.put('/:id', function(req, res) {
+  let mysql = req.app.get('mysql');
+  // console.log(req.body)
+  // console.log(req.params.id)
+  let sql = 'UPDATE folder SET name=?, creator=? WHERE id=?';
+  let inserts = [req.body.name, req.body.creator, req.params.id];
+  sql = mysql.pool.query(sql, inserts, (err, results) => {
+    if (err) {
+      res.write(JSON.stringify(error));
+      res.end();
+    } else {
+      res.status(200);
+      res.end();
+    }
+  });
+});
 
 // //Delete folder from database
 // router.get('/deletefolder/:id', (req, res) => {

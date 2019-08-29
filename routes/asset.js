@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+//Helper function to Select all assets
 function getAssets(res, mysql, context, complete) {
   mysql.pool.query('SELECT * FROM asset', function(err, results, fields) {
     if (err) {
@@ -12,6 +13,7 @@ function getAssets(res, mysql, context, complete) {
   });
 }
 
+//Helper function to Select a single asset
 function getSingleAsset(res, mysql, context, id, complete) {
   let sql = `SELECT * FROM asset WHERE id = ?`;
   let inserts = [id];
@@ -25,7 +27,7 @@ function getSingleAsset(res, mysql, context, id, complete) {
   });
 }
 
-//Route to Select all assets in database
+//GET request to Select all assets in database
 router.get('/', (req, res) => {
   let callBackCount = 0;
   let context = {};
@@ -39,7 +41,7 @@ router.get('/', (req, res) => {
   }
 });
 
-//Route to Select a single asset from database
+//GET request to Select a single asset from database
 router.get('/:id', (req, res) => {
   let callBackCount = 0;
   let context = {};
@@ -53,7 +55,7 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// Post request to insert an asset
+// POST request to Create an asset
 router.post('/', (req, res) => {
   let mysql = req.app.get('mysql');
   let sql =
@@ -75,16 +77,31 @@ router.post('/', (req, res) => {
   });
 });
 
-// // Route to Update asset name in database
-// router.get('/update/:id', (req, res) => {
-//   let newName = 'Updated_Asset_Name!';
-//   let sql = `UPDATE asset SET name = '${newName}' WHERE id = ${req.params.id}`;
-//   let query = connection.query(sql, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(JSON.stringify(result));
-//   });
-// });
+// PUT request to Update asset in database
+router.put('/:id', function(req, res) {
+  let mysql = req.app.get('mysql');
+  // console.log(req.body)
+  // console.log(req.params.id)
+  let sql =
+    'UPDATE asset SET name=?, physical_file_name=?, uploader=?, physical_file_size=?, physical_file_type=? WHERE id=?';
+  let inserts = [
+    req.body.name,
+    req.body.fileName,
+    req.body.uploader,
+    req.body.fileSize,
+    req.body.fileType,
+    req.params.id
+  ];
+  sql = mysql.pool.query(sql, inserts, (err, results) => {
+    if (err) {
+      res.write(JSON.stringify(error));
+      res.end();
+    } else {
+      res.status(200);
+      res.end();
+    }
+  });
+});
 
 // //Delete asset from database
 // router.get('/delete/:id', (req, res) => {

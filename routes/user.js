@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+//Helper function to Select all users
 function getUsers(res, mysql, context, complete) {
   mysql.pool.query('SELECT * FROM user', (err, results, fields) => {
     if (err) {
@@ -12,6 +13,7 @@ function getUsers(res, mysql, context, complete) {
   });
 }
 
+//Helper function to Select a single user
 function getSingleUser(res, mysql, context, id, complete) {
   let sql = `SELECT * FROM user WHERE id = ?`;
   let inserts = [id];
@@ -25,7 +27,7 @@ function getSingleUser(res, mysql, context, id, complete) {
   });
 }
 
-//Route to Select all users in database
+//GET request to Select all users in database
 router.get('/', (req, res) => {
   let callBackCount = 0;
   let context = {};
@@ -39,7 +41,7 @@ router.get('/', (req, res) => {
   }
 });
 
-//Route to Select a single user from database
+//GET request to Select a single user from database
 router.get('/:id', (req, res) => {
   let callBackCount = 0;
   let context = {};
@@ -53,12 +55,12 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// Post Request to insert a hard-coded user
+// POST Request to Create a hard-coded user
 router.post('/', (req, res) => {
   let mysql = req.app.get('mysql');
   let sql = 'INSERT INTO user (email, pw) VALUES (?, ?)';
   let inserts = [req.body.email, req.body.pw];
-  sql = mysql.pool.query(sql, inserts, (err, result) => {
+  sql = mysql.pool.query(sql, inserts, (err, results) => {
     if (err) {
       res.write(JSON.stringify(err));
       res.end();
@@ -68,16 +70,23 @@ router.post('/', (req, res) => {
   });
 });
 
-// // Route to Update user password in database
-// router.get('/update/:id', (req, res) => {
-//   let newPassword = 'Updated_Password!';
-//   let sql = `UPDATE user SET pw = '${newPassword}' WHERE id = ${req.params.id}`;
-//   let query = connection.query(sql, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(JSON.stringify(result));
-//   });
-// });
+// PUT request to Update user in database
+router.put('/:id', function(req, res) {
+  let mysql = req.app.get('mysql');
+  // console.log(req.body)
+  // console.log(req.params.id)
+  let sql = 'UPDATE user SET email=?, pw=? WHERE id=?';
+  let inserts = [req.body.email, req.body.pw, req.params.id];
+  sql = mysql.pool.query(sql, inserts, (err, results) => {
+    if (err) {
+      res.write(JSON.stringify(error));
+      res.end();
+    } else {
+      res.status(200);
+      res.end();
+    }
+  });
+});
 
 // // Delete user from database
 // router.get('/deleteuser/:id', (req, res) => {
