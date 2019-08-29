@@ -25,20 +25,6 @@ function getSingleFolder(res, mysql, context, id, complete) {
   });
 }
 
-// //Insert a folder
-// router.get('/addfolder', (req, res) => {
-//   let folder = {
-//     name: 'folder_for_important_things',
-//     creator: 3
-//   };
-//   let sql = 'INSERT INTO folder SET ?';
-//   let query = connection.query(sql, folder, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(result.insertId);
-//   });
-// });
-
 //Route to Select all folders in database
 router.get('/', (req, res) => {
   let callBackCount = 0;
@@ -65,6 +51,35 @@ router.get('/:id', (req, res) => {
       res.send(context);
     }
   }
+});
+
+// //Insert a folder
+// router.get('/addfolder', (req, res) => {
+//   let folder = {
+//     name: 'folder_for_important_things',
+//     creator: 3
+//   };
+//   let sql = 'INSERT INTO folder SET ?';
+//   let query = connection.query(sql, folder, (err, result) => {
+//     if (err) throw err;
+//     console.log(result);
+//     res.send(result.insertId);
+//   });
+// });
+
+// Post request to insert a folder
+router.post('/', (req, res) => {
+  let mysql = req.app.get('mysql');
+  let sql = 'INSERT INTO folder (name, creator) VALUES (?, ?)';
+  let inserts = [req.body.name, req.body.creator];
+  sql = mysql.pool.query(sql, inserts, (err, result) => {
+    if (err) {
+      res.write(JSON.stringify(err));
+      res.end();
+    } else {
+      res.redirect('/folder');
+    }
+  });
 });
 
 // // Route to Update asset name in database

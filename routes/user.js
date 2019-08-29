@@ -1,19 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// // Insert a hard-coded user
-// router.get('/adduser', (req, res) => {
-//   let user = { email: 'user2@gmail.com', pw: 'userPassword!' };
-//   let sql = 'INSERT INTO user SET ?';
-//   let query = connection.query(sql, user, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(result.insertId);
-//   });
-// });
-
 function getUsers(res, mysql, context, complete) {
-  mysql.pool.query('SELECT * FROM user', function(err, results, fields) {
+  mysql.pool.query('SELECT * FROM user', (err, results, fields) => {
     if (err) {
       res.write(JSON.stringify(err));
       res.end();
@@ -62,6 +51,21 @@ router.get('/:id', (req, res) => {
       res.send(context);
     }
   }
+});
+
+// Post Request to insert a hard-coded user
+router.post('/', (req, res) => {
+  let mysql = req.app.get('mysql');
+  let sql = 'INSERT INTO user (email, pw) VALUES (?, ?)';
+  let inserts = [req.body.email, req.body.pw];
+  sql = mysql.pool.query(sql, inserts, (err, result) => {
+    if (err) {
+      res.write(JSON.stringify(err));
+      res.end();
+    } else {
+      res.redirect('/user');
+    }
+  });
 });
 
 // // Route to Update user password in database

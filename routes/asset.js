@@ -25,23 +25,6 @@ function getSingleAsset(res, mysql, context, id, complete) {
   });
 }
 
-// //Insert an asset
-// router.get('/addasset', (req, res) => {
-//   let asset = {
-//     name: 'important_asset',
-//     physical_file_name: 'important.pdf',
-//     uploader: 3,
-//     physical_file_size: 5,
-//     physical_file_type: 'pdf'
-//   };
-//   let sql = 'INSERT INTO asset SET ?';
-//   let query = connection.query(sql, asset, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(result.insertId);
-//   });
-// });
-
 //Route to Select all assets in database
 router.get('/', (req, res) => {
   let callBackCount = 0;
@@ -68,6 +51,28 @@ router.get('/:id', (req, res) => {
       res.send(context);
     }
   }
+});
+
+// Post request to insert an asset
+router.post('/', (req, res) => {
+  let mysql = req.app.get('mysql');
+  let sql =
+    'INSERT INTO asset (name, physical_file_name, uploader, physical_file_size, physical_file_type) VALUES (?, ?, ?, ?, ?)';
+  let inserts = [
+    req.body.name,
+    req.body.fileName,
+    req.body.uploader,
+    req.body.fileSize,
+    req.body.fileType
+  ];
+  sql = mysql.pool.query(sql, inserts, (err, result) => {
+    if (err) {
+      res.write(JSON.stringify(err));
+      res.end();
+    } else {
+      res.redirect('/asset');
+    }
+  });
 });
 
 // // Route to Update asset name in database
