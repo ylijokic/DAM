@@ -3,9 +3,9 @@ const router = express.Router();
 
 //Helper function to Select all users
 function getUsers(res, mysql, context, complete) {
-  mysql.pool.query('SELECT * FROM user', (err, results, fields) => {
-    if (err) {
-      res.write(JSON.stringify(err));
+  mysql.pool.query('SELECT * FROM user', (error, results, fields) => {
+    if (error) {
+      res.write(JSON.stringify(error));
       res.end();
     }
     context.user = results;
@@ -15,11 +15,11 @@ function getUsers(res, mysql, context, complete) {
 
 //Helper function to Select a single user
 function getSingleUser(res, mysql, context, id, complete) {
-  let sql = `SELECT * FROM user WHERE id = ?`;
-  let inserts = [id];
-  mysql.pool.query(sql, inserts, (err, results, fields) => {
-    if (err) {
-      res.write(JSON.stringify(err));
+  const sql = `SELECT * FROM user WHERE id = ?`;
+  const inserts = [id];
+  mysql.pool.query(sql, inserts, (error, results, fields) => {
+    if (error) {
+      res.write(JSON.stringify(error));
       res.end();
     }
     context.user = results;
@@ -29,40 +29,32 @@ function getSingleUser(res, mysql, context, id, complete) {
 
 //GET request to Select all users in database
 router.get('/', (req, res) => {
-  let callBackCount = 0;
-  let context = {};
-  let mysql = req.app.get('mysql');
+  const context = {};
+  const mysql = req.app.get('mysql');
   getUsers(res, mysql, context, complete);
   function complete() {
-    callBackCount++;
-    if (callBackCount >= 1) {
-      res.send(context);
-    }
+    res.send(context);
   }
 });
 
 //GET request to Select a single user from database
 router.get('/:id', (req, res) => {
-  let callBackCount = 0;
-  let context = {};
-  let mysql = req.app.get('mysql');
+  const context = {};
+  const mysql = req.app.get('mysql');
   getSingleUser(res, mysql, context, req.params.id, complete);
   function complete() {
-    callBackCount++;
-    if (callBackCount >= 1) {
-      res.send(context);
-    }
+    res.send(context);
   }
 });
 
 // POST Request to Create a hard-coded user
 router.post('/', (req, res) => {
-  let mysql = req.app.get('mysql');
-  let sql = 'INSERT INTO user (email, pw) VALUES (?, ?)';
-  let inserts = [req.body.email, req.body.pw];
-  sql = mysql.pool.query(sql, inserts, (err, results) => {
-    if (err) {
-      res.write(JSON.stringify(err));
+  const mysql = req.app.get('mysql');
+  const sql = 'INSERT INTO user (email, pw) VALUES (?, ?)';
+  const inserts = [req.body.email, req.body.pw];
+  mysql.pool.query(sql, inserts, (error, results) => {
+    if (error) {
+      res.write(JSON.stringify(error));
       res.end();
     } else {
       res.redirect('/user');
@@ -72,13 +64,11 @@ router.post('/', (req, res) => {
 
 // PUT request to Update user in database
 router.put('/:id', function(req, res) {
-  let mysql = req.app.get('mysql');
-  // console.log(req.body)
-  // console.log(req.params.id)
-  let sql = 'UPDATE user SET email=?, pw=? WHERE id=?';
-  let inserts = [req.body.email, req.body.pw, req.params.id];
-  sql = mysql.pool.query(sql, inserts, (err, results) => {
-    if (err) {
+  const mysql = req.app.get('mysql');
+  const sql = 'UPDATE user SET email=?, pw=? WHERE id=?';
+  const inserts = [req.body.email, req.body.pw, req.params.id];
+  mysql.pool.query(sql, inserts, (error, results) => {
+    if (error) {
       res.write(JSON.stringify(error));
       res.end();
     } else {
@@ -90,11 +80,11 @@ router.put('/:id', function(req, res) {
 
 // DELETE request to Delete user from database
 router.delete('/:id', function(req, res) {
-  let mysql = req.app.get('mysql');
-  let sql = 'DELETE FROM user WHERE id=?';
-  let inserts = [req.params.id];
-  sql = mysql.pool.query(sql, inserts, (err, results) => {
-    if (err) {
+  const mysql = req.app.get('mysql');
+  const sql = 'DELETE FROM user WHERE id=?';
+  const inserts = [req.params.id];
+  mysql.pool.query(sql, inserts, (error, results) => {
+    if (error) {
       // console.log(error)
       res.write(JSON.stringify(error));
       res.status(400);
