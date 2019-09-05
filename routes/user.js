@@ -1,21 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-// // Insert a hard-coded user
-// router.get('/adduser', (req, res) => {
-//   let user = { email: 'user2@gmail.com', pw: 'userPassword!' };
-//   let sql = 'INSERT INTO user SET ?';
-//   let query = connection.query(sql, user, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(result.insertId);
-//   });
-// });
-
+//Helper function to Select all users
 function getUsers(res, mysql, context, complete) {
-  mysql.pool.query('SELECT * FROM user', function(err, results, fields) {
-    if (err) {
-      res.write(JSON.stringify(err));
+  mysql.pool.query('SELECT * FROM user', (error, results, fields) => {
+    if (error) {
+      res.write(JSON.stringify(error));
       res.end();
     }
     context.user = results;
@@ -23,12 +13,13 @@ function getUsers(res, mysql, context, complete) {
   });
 }
 
+//Helper function to Select a single user
 function getSingleUser(res, mysql, context, id, complete) {
-  let sql = `SELECT * FROM user WHERE id = ?`;
-  let inserts = [id];
-  mysql.pool.query(sql, inserts, (err, results, fields) => {
-    if (err) {
-      res.write(JSON.stringify(err));
+  const sql = `SELECT * FROM user WHERE id = ?`;
+  const inserts = [id];
+  mysql.pool.query(sql, inserts, (error, results, fields) => {
+    if (error) {
+      res.write(JSON.stringify(error));
       res.end();
     }
     context.user = results;
@@ -36,53 +27,72 @@ function getSingleUser(res, mysql, context, id, complete) {
   });
 }
 
-//Route to Select all users in database
+//GET request to Select all users in database
 router.get('/', (req, res) => {
-  let callBackCount = 0;
-  let context = {};
-  let mysql = req.app.get('mysql');
+  const context = {};
+  const mysql = req.app.get('mysql');
   getUsers(res, mysql, context, complete);
   function complete() {
-    callBackCount++;
-    if (callBackCount >= 1) {
-      res.send(context);
-    }
+    res.send(context);
   }
 });
 
-//Route to Select a single user from database
+//GET request to Select a single user from database
 router.get('/:id', (req, res) => {
-  let callBackCount = 0;
-  let context = {};
-  let mysql = req.app.get('mysql');
+  const context = {};
+  const mysql = req.app.get('mysql');
   getSingleUser(res, mysql, context, req.params.id, complete);
   function complete() {
-    callBackCount++;
-    if (callBackCount >= 1) {
-      res.send(context);
-    }
+    res.send(context);
   }
 });
 
-// // Route to Update user password in database
-// router.get('/update/:id', (req, res) => {
-//   let newPassword = 'Updated_Password!';
-//   let sql = `UPDATE user SET pw = '${newPassword}' WHERE id = ${req.params.id}`;
-//   let query = connection.query(sql, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(JSON.stringify(result));
-//   });
-// });
+// POST Request to Create a hard-coded user
+router.post('/', (req, res) => {
+  const mysql = req.app.get('mysql');
+  const sql = 'INSERT INTO user (email, pw) VALUES (?, ?)';
+  const inserts = [req.body.email, req.body.pw];
+  mysql.pool.query(sql, inserts, (error, results) => {
+    if (error) {
+      res.write(JSON.stringify(error));
+      res.end();
+    } else {
+      res.redirect('/user');
+    }
+  });
+});
 
-// // Delete user from database
-// router.get('/deleteuser/:id', (req, res) => {
-//   let sql = `DELETE FROM user WHERE id = ${req.params.id}`;
-//   let query = connection.query(sql, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     res.send(JSON.stringify(result));
-//   });
-// });
+// PUT request to Update user in database
+router.put('/:id', function(req, res) {
+  const mysql = req.app.get('mysql');
+  const sql = 'UPDATE user SET email=?, pw=? WHERE id=?';
+  const inserts = [req.body.email, req.body.pw, req.params.id];
+  mysql.pool.query(sql, inserts, (error, results) => {
+    if (error) {
+      res.write(JSON.stringify(error));
+      res.end();
+    } else {
+      res.status(200);
+      res.end();
+    }
+  });
+});
+
+// DELETE request to Delete user from database
+router.delete('/:id', function(req, res) {
+  const mysql = req.app.get('mysql');
+  const sql = 'DELETE FROM user WHERE id=?';
+  const inserts = [req.params.id];
+  mysql.pool.query(sql, inserts, (error, results) => {
+    if (error) {
+      // console.log(error)
+      res.write(JSON.stringify(error));
+      res.status(400);
+      res.end();
+    } else {
+      res.end();
+    }
+  });
+});
 
 module.exports = router;
