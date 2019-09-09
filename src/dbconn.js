@@ -1,5 +1,5 @@
-const mysql = require('mysql2');
-const secrets = require('../secrets.json');
+const mysql = require('mysql2')
+const secrets = require('../secrets.json')
 
 // create the connection to database
 
@@ -8,13 +8,13 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: secrets.MYSQL_USER,
   password: secrets.MYSQL_PASS,
-  database: 'dam'
-});
+  database: 'dam',
+})
 
 //Check Database Connection
 connection.connect(err => {
-  if (err) throw err;
+  if (err) throw err
   // console.log(result);
-});
+})
 
-module.exports.pool = connection;
+module.exports.pool = connection
