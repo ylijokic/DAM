@@ -1,7 +1,8 @@
 const express = require('express')
+
 const router = express.Router()
 
-//Helper function to Select all users
+// Helper function to Select all users
 function getUsers(res, mysql, context, complete) {
   mysql.pool.query('SELECT * FROM user', (error, results, fields) => {
     if (error) {
@@ -13,7 +14,7 @@ function getUsers(res, mysql, context, complete) {
   })
 }
 
-//Helper function to Select a single user
+// Helper function to Select a single user
 function getSingleUser(res, mysql, context, id, complete) {
   const sql = `SELECT * FROM user WHERE id = ?`
   const inserts = [id]
@@ -27,7 +28,7 @@ function getSingleUser(res, mysql, context, id, complete) {
   })
 }
 
-//GET request to Select all users in database
+// GET request to Select all users in database
 router.get('/', (req, res) => {
   const context = {}
   const mysql = req.app.get('mysql')
@@ -37,7 +38,7 @@ router.get('/', (req, res) => {
   }
 })
 
-//GET request to Select a single user from database
+// GET request to Select a single user from database
 router.get('/:id', (req, res) => {
   const context = {}
   const mysql = req.app.get('mysql')

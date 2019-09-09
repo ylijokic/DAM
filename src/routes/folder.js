@@ -1,7 +1,8 @@
 const express = require('express')
+
 const router = express.Router()
 
-//Helper function to Select all folders
+// Helper function to Select all folders
 function getFolders(res, mysql, context, complete) {
   mysql.pool.query('SELECT * FROM folder', (error, results, fields) => {
     if (error) {
@@ -13,7 +14,7 @@ function getFolders(res, mysql, context, complete) {
   })
 }
 
-//Helper function to Select a single folder
+// Helper function to Select a single folder
 function getSingleFolder(res, mysql, context, id, complete) {
   const sql = `SELECT * FROM folder WHERE id = ?`
   const inserts = [id]
@@ -27,7 +28,7 @@ function getSingleFolder(res, mysql, context, id, complete) {
   })
 }
 
-//GET request to Select all folders in database
+// GET request to Select all folders in database
 router.get('/', (req, res) => {
   const context = {}
   const mysql = req.app.get('mysql')
@@ -37,7 +38,7 @@ router.get('/', (req, res) => {
   }
 })
 
-//GET request to Select a single folder from database
+// GET request to Select a single folder from database
 router.get('/:id', (req, res) => {
   const context = {}
   const mysql = req.app.get('mysql')

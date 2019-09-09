@@ -3,7 +3,7 @@ const secrets = require('../secrets.json')
 
 // create the connection to database
 
-/****Password is left empty****/
+/** **Password is left empty*** */
 const connection = mysql.createConnection({
   host: 'localhost',
   user: secrets.MYSQL_USER,
@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
   database: 'dam',
 })
 
-//Check Database Connection
+// Check Database Connection
 connection.connect(err => {
   if (err) throw err
   // console.log(result);

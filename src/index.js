@@ -4,17 +4,17 @@ const app = express()
 
 const mysql = require('./dbconn')
 
-//Router Modules
+// Router Modules
 const user = require('./routes/user')
 const asset = require('./routes/asset')
 const folder = require('./routes/folder')
 
-//Load Router Modules in App
+// Load Router Modules in App
 app.use('/user', user)
 app.use('/asset', asset)
 app.use('/folder', folder)
 
-//Load Database into App
+// Load Database into App
 app.set('mysql', mysql)
 
 app.use(function(req, res) {

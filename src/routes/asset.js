@@ -1,7 +1,8 @@
 const express = require('express')
+
 const router = express.Router()
 
-//Helper function to Select all assets
+// Helper function to Select all assets
 function getAssets(res, mysql, context, complete) {
   mysql.pool.query('SELECT * FROM asset', (error, results, fields) => {
     if (error) {
@@ -13,7 +14,7 @@ function getAssets(res, mysql, context, complete) {
   })
 }
 
-//Helper function to Select a single asset
+// Helper function to Select a single asset
 function getSingleAsset(res, mysql, context, id, complete) {
   const sql = `SELECT * FROM asset WHERE id = ?`
   const inserts = [id]
@@ -27,7 +28,7 @@ function getSingleAsset(res, mysql, context, id, complete) {
   })
 }
 
-//GET request to Select all assets in database
+// GET request to Select all assets in database
 router.get('/', (req, res) => {
   const context = {}
   const mysql = req.app.get('mysql')
@@ -37,7 +38,7 @@ router.get('/', (req, res) => {
   }
 })
 
-//GET request to Select a single asset from database
+// GET request to Select a single asset from database
 router.get('/:id', (req, res) => {
   const context = {}
   const mysql = req.app.get('mysql')
