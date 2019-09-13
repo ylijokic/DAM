@@ -4,7 +4,7 @@ const router = express.Router()
 
 // Helper function to Select all users
 function getUsers(res, mysql, context, complete) {
-  mysql.pool.query('SELECT * FROM user', (error, results) => {
+  mysql.pool.query('SELECT * FROM user', (error, results, fields) => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -18,7 +18,7 @@ function getUsers(res, mysql, context, complete) {
 function getSingleUser(res, mysql, context, id, complete) {
   const sql = `SELECT * FROM user WHERE id = ?`
   const inserts = [id]
-  mysql.pool.query(sql, inserts, (error, results) => {
+  mysql.pool.query(sql, inserts, (error, results, fields) => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
   const mysql = req.app.get('mysql')
   getUsers(res, mysql, context, complete)
   function complete() {
-    res.render('user', context)
+    res.send(context)
   }
 })
 
@@ -53,7 +53,7 @@ router.post('/', (req, res) => {
   const mysql = req.app.get('mysql')
   const sql = 'INSERT INTO user (email, pw) VALUES (?, ?)'
   const inserts = [req.body.email, req.body.pw]
-  mysql.pool.query(sql, inserts, error => {
+  mysql.pool.query(sql, inserts, (error, results) => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -64,11 +64,11 @@ router.post('/', (req, res) => {
 })
 
 // PUT request to Update user in database
-router.put('/:id', (req, res) => {
+router.put('/:id', function(req, res) {
   const mysql = req.app.get('mysql')
   const sql = 'UPDATE user SET email=?, pw=? WHERE id=?'
   const inserts = [req.body.email, req.body.pw, req.params.id]
-  mysql.pool.query(sql, inserts, error => {
+  mysql.pool.query(sql, inserts, (error, results) => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -80,11 +80,11 @@ router.put('/:id', (req, res) => {
 })
 
 // DELETE request to Delete user from database
-router.delete('/:id', (req, res) => {
+router.delete('/:id', function(req, res) {
   const mysql = req.app.get('mysql')
   const sql = 'DELETE FROM user WHERE id=?'
   const inserts = [req.params.id]
-  mysql.pool.query(sql, inserts, error => {
+  mysql.pool.query(sql, inserts, (error, results) => {
     if (error) {
       // console.log(error)
       res.write(JSON.stringify(error))
