@@ -1,0 +1,19 @@
+<h3>List of Users:</h3>
+<table class="">
+    <thead>
+        <th>Email</th>
+        <th>Password</th>
+        <th>Update User</th>
+        <th>Delete User</th>
+    </thead>
+    <tbody>
+        {{#each user}}
+        <tr>
+            <td>{{email}}</td>
+            <td>{{pw}}</td>
+            <td><a href="/user/{{id}}" class="material-icons teal-text text-lighten-2">update</a></td>
+            <td><button onclick="deleteUser({{id}})" class="material-icons red-text btn-flat">clear</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
