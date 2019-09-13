@@ -4,7 +4,7 @@ const router = express.Router()
 
 // Helper function to Select all assets
 function getAssets(res, mysql, context, complete) {
-  mysql.pool.query('SELECT * FROM asset', (error, results, fields) => {
+  mysql.pool.query('SELECT * FROM asset', (error, results) => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -18,7 +18,7 @@ function getAssets(res, mysql, context, complete) {
 function getSingleAsset(res, mysql, context, id, complete) {
   const sql = `SELECT * FROM asset WHERE id = ?`
   const inserts = [id]
-  mysql.pool.query(sql, inserts, (error, results, fields) => {
+  mysql.pool.query(sql, inserts, (error, results) => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
   const mysql = req.app.get('mysql')
   getAssets(res, mysql, context, complete)
   function complete() {
-    res.send(context)
+    res.render('asset', context)
   }
 })
 
@@ -60,7 +60,7 @@ router.post('/', (req, res) => {
     req.body.fileSize,
     req.body.fileType,
   ]
-  mysql.pool.query(sql, inserts, (error, result) => {
+  mysql.pool.query(sql, inserts, error => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -71,7 +71,7 @@ router.post('/', (req, res) => {
 })
 
 // PUT request to Update asset in database
-router.put('/:id', function(req, res) {
+router.put('/:id', (req, res) => {
   const mysql = req.app.get('mysql')
   const sql =
     'UPDATE asset SET name=?, physical_file_name=?, uploader=?, physical_file_size=?, physical_file_type=? WHERE id=?'
@@ -83,7 +83,7 @@ router.put('/:id', function(req, res) {
     req.body.fileType,
     req.params.id,
   ]
-  mysql.pool.query(sql, inserts, (error, results) => {
+  mysql.pool.query(sql, inserts, error => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -95,11 +95,11 @@ router.put('/:id', function(req, res) {
 })
 
 // DELETE request to Delete an asset from database
-router.delete('/:id', function(req, res) {
+router.delete('/:id', (req, res) => {
   const mysql = req.app.get('mysql')
   const sql = 'DELETE FROM asset WHERE id=?'
   const inserts = [req.params.id]
-  mysql.pool.query(sql, inserts, (error, results) => {
+  mysql.pool.query(sql, inserts, error => {
     if (error) {
       // console.log(error)
       res.write(JSON.stringify(error))

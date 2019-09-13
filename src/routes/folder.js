@@ -4,7 +4,7 @@ const router = express.Router()
 
 // Helper function to Select all folders
 function getFolders(res, mysql, context, complete) {
-  mysql.pool.query('SELECT * FROM folder', (error, results, fields) => {
+  mysql.pool.query('SELECT * FROM folder', (error, results) => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -18,7 +18,7 @@ function getFolders(res, mysql, context, complete) {
 function getSingleFolder(res, mysql, context, id, complete) {
   const sql = `SELECT * FROM folder WHERE id = ?`
   const inserts = [id]
-  mysql.pool.query(sql, inserts, (error, results, fields) => {
+  mysql.pool.query(sql, inserts, (error, results) => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
   const mysql = req.app.get('mysql')
   getFolders(res, mysql, context, complete)
   function complete() {
-    res.send(context)
+    res.render('folder', context)
   }
 })
 
@@ -53,7 +53,7 @@ router.post('/', (req, res) => {
   const mysql = req.app.get('mysql')
   const sql = 'INSERT INTO folder (name, creator) VALUES (?, ?)'
   const inserts = [req.body.name, req.body.creator]
-  mysql.pool.query(sql, inserts, (error, result) => {
+  mysql.pool.query(sql, inserts, error => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -64,11 +64,11 @@ router.post('/', (req, res) => {
 })
 
 // PUT request to Update folder in database
-router.put('/:id', function(req, res) {
+router.put('/:id', (req, res) => {
   const mysql = req.app.get('mysql')
   const sql = 'UPDATE folder SET name=?, creator=? WHERE id=?'
   const inserts = [req.body.name, req.body.creator, req.params.id]
-  mysql.pool.query(sql, inserts, (error, results) => {
+  mysql.pool.query(sql, inserts, error => {
     if (error) {
       res.write(JSON.stringify(error))
       res.end()
@@ -80,11 +80,11 @@ router.put('/:id', function(req, res) {
 })
 
 // DELETE request to Delete a folder from database
-router.delete('/:id', function(req, res) {
+router.delete('/:id', (req, res) => {
   const mysql = req.app.get('mysql')
   const sql = 'DELETE FROM folder WHERE id=?'
   const inserts = [req.params.id]
-  mysql.pool.query(sql, inserts, (error, results) => {
+  mysql.pool.query(sql, inserts, error => {
     if (error) {
       // console.log(error)
       res.write(JSON.stringify(error))
