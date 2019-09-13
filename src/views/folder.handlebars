@@ -1,0 +1,17 @@
+<h3>List of Folders:</h3>
+<table class="">
+    <thead>
+        <th>Folder Name</th>
+        <th>Creator</th>
+    </thead>
+    <tbody>
+        {{#each folder}}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{creator}}</td>
+            <td><a href="/folder/{{id}}" class="material-icons teal-text text-lighten-2">update</a></td>
+            <td><button onclick="deleteFolder({{id}})" class="material-icons red-text btn-flat">clear</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
