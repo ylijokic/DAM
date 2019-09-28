@@ -71,6 +71,7 @@ router.post('/', (req, res) => {
 })
 
 // PUT request to Update asset in database
+// FIXME: this function should be updated to handle partial asset updates
 router.put('/:id', function(req, res) {
   const mysql = req.app.get('mysql')
   const sql =

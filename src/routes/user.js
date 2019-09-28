@@ -64,6 +64,7 @@ router.post('/', (req, res) => {
 })
 
 // PUT request to Update user in database
+// FIXME: this function should be updated to handle partial user updates
 router.put('/:id', function(req, res) {
   const mysql = req.app.get('mysql')
   const sql = 'UPDATE user SET email=?, pw=? WHERE id=?'
